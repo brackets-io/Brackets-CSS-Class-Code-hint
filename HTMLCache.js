@@ -129,15 +129,23 @@ define(function (require, exports, module) {
             $.each(links, function () {
                 var link = $.parseHTML(this)[0],
                     path;
-    
-                if (link.href.slice(-3).toLowerCase() === "css") {
+                //allow parameter
+                if (/\.css(\?.*)?$/.test(link.href)) {
                     path = link.getAttribute("href");
+                    path = path.replace(/\?.*$/, "");
                     
                     if (EXTERNAL_LINK.test(path) === false) {
                         // when reference root, rewrite to ProjectRoot path
-                        path = path[0] === "/" ? projectRoot.slice(0,-1) + path : docRoot + path;
+                        if(path[0] === "/"){
+                            path = projectRoot + path.slice(1);
+                        } else {
+                            path = docRoot + path;
+                        }
                         path = _resolvePath(path);
-                        deps.push(path);
+                        //console.log(path);
+                        if(deps.indexOf(path) === -1){
+                            deps.push(path);
+                        }
                     }
                 }
             });

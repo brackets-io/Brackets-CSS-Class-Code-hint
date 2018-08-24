@@ -337,7 +337,7 @@ define(function (require, exports, module) {
     function _fsChangeHandler(e, change, added, removed) {
         var filterOnlyCSS = function (entry) { return entry.isFile && cssExt.test(entry.name); };
         
-        if (change.isDirectory) {
+        if (change && change.isDirectory) {
             added = added.filter(filterOnlyCSS);
             removed = removed.filter(filterOnlyCSS);
             
@@ -355,13 +355,13 @@ define(function (require, exports, module) {
     
     // Listen editor change event for HTMLParse and Caching.
     //_instance.__editorChange(EditorManager.getActiveEditor());
-    $(EditorManager).on("activeEditorChange", _editorChangeHandler);
+    EditorManager.on("activeEditorChange", _editorChangeHandler);
     
     // Listen projectOpen event for Initialize cache and precache css.
-    $(ProjectManager).on("projectOpen projectRefresh", _projectOpenHandler);
+    ProjectManager.on("projectOpen projectRefresh", _projectOpenHandler);
     
     // Listen document update event
-    $(DocumentManager).on("documentSaved documentRefreshed", _documentUpdateHandler);
+    DocumentManager.on("documentSaved documentRefreshed", _documentUpdateHandler);
     
     // Listen FileSystem change event
     FileSystem.on("change", _fsChangeHandler);
